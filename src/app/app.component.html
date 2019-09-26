@@ -3,10 +3,11 @@
   <h1>
     Face recognition using Azure Face detection API
   </h1>
-  <img width="500" src="{{ pictureUrl }}">
+  <img src="{{ pictureUrl }}">
   <br>
   <textarea id="" cols="100" rows="1" [(ngModel)]="pictureUrl"></textarea>
   <button (click)="detectFaces()">Click here to detect faces</button>
   <br>
   <textarea id="" cols="100" rows="10" >{{ response }}</textarea>
+  <canvas #canvas></canvas>
 <router-outlet></router-outlet>
