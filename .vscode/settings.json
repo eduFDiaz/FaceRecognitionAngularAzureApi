@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/57d520eb-1d23-4b89-98cf-1413086d52d4/resourceGroups/MyAPIs/providers/Microsoft.Web/sites/EduardoFaceRecognition2",
+    "appService.deploySubpath": ""
+}

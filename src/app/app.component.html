@@ -10,7 +10,7 @@
         <button class="btn btn-success p-1 m-1 w-25" (click)="detectFaces()">
           Click here to detect faces
         </button>
-        <textarea class="p-1 m-1 w-75" rows="1" [(ngModel)]="pictureUrl"></textarea>
+        <input type="text" (change)="drawImage(image)" class="p-1 m-1 w-75" rows="1" [(ngModel)]="image.src">
       </span>
     </div>
     <div class="container">

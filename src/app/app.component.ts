@@ -10,7 +10,6 @@ import { HttpHeaders } from '@angular/common/http';
   styleUrls: ['./app.component.sass']
 })
 export class AppComponent implements OnInit {
-  pictureUrl = 'http://sparethekids.com/wp-content/uploads/2017/03/cmgmh-14320822.png';
   title = 'FaceRecognition';
   response = '';
   faces: any;
@@ -22,7 +21,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.image.src = this.pictureUrl;
+    this.image.src = 'http://sparethekids.com/wp-content/uploads/2017/03/cmgmh-14320822.png';
     if (this.image.complete) {
       this.drawImage(this.image);
     }
@@ -40,7 +39,7 @@ export class AppComponent implements OnInit {
     httpParams.append('returnFaceAttributes',
       'age,gender,headPose,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories,blur,exposure,noise');
 
-    this.http.post(environment.apiEndpoint, { url: this.pictureUrl, params: httpParams }, { headers }).subscribe(
+    this.http.post(environment.apiEndpoint, { url: this.image.src, params: httpParams }, { headers }).subscribe(
       response => {
         this.response = JSON.stringify(response, null, 4);
         this.faces = response;
