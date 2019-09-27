@@ -1,13 +1,23 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Face recognition using Azure Face detection API
-  </h1>
-  <img src="{{ pictureUrl }}">
-  <br>
-  <textarea id="" cols="100" rows="1" [(ngModel)]="pictureUrl"></textarea>
-  <button (click)="detectFaces()">Click here to detect faces</button>
-  <br>
-  <textarea id="" cols="100" rows="10" >{{ response }}</textarea>
-  <canvas #canvas></canvas>
+<div style="align-content: center" class="container">
+  <div class="row">
+    <h2>
+      Face recognition using Azure Face detection API
+    </h2>
+    <div class="col">
+      <canvas #canvas></canvas>
+      <span class='d-flex'>
+        <button class="btn btn-success p-1 m-1 w-25" (click)="detectFaces()">
+          Click here to detect faces
+        </button>
+        <textarea class="p-1 m-1 w-75" rows="1" [(ngModel)]="pictureUrl"></textarea>
+      </span>
+    </div>
+    <div class="container">
+      <textarea class="p-1 m-1" *ngIf="response" id="" cols="100" rows="10">{{
+        response
+      }}</textarea>
+    </div>
+  </div>
+</div>
 <router-outlet></router-outlet>
