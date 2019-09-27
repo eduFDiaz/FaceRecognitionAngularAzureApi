@@ -13,6 +13,7 @@ export class AppComponent {
   pictureUrl = 'http://sparethekids.com/wp-content/uploads/2017/03/cmgmh-14320822.png';
   title = 'FaceRecognition';
   response = '';
+  faces: any;
 
   @Input() public width = 495;
   @Input() public height = 445;
@@ -37,7 +38,11 @@ export class AppComponent {
       'age,gender,headPose,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories,blur,exposure,noise');
 
     this.http.post(environment.apiEndpoint, { url: this.pictureUrl, params: httpParams } , { headers }).subscribe(
-      response => { this.response = JSON.stringify(response, null, 4); console.log(response[0]); this.drawCanvas(); }
+      response => {
+        this.response = JSON.stringify(response, null, 4);
+        this.faces = response;
+        this.drawCanvas();
+      }
       , error => { alert(error); }
     );
   }
@@ -56,6 +61,14 @@ export class AppComponent {
     this.cx.strokeStyle = '#000';
     image.onload = () => {
         this.cx.drawImage(image, 0, 0, image.width, image.height);
+        this.faces.forEach(face => {
+          const box = face.faceRectangle;
+          this.cx.beginPath();
+          this.cx.rect(box.left, box.top, box.width, box.height);
+          this.cx.lineWidth = 7;
+          this.cx.strokeStyle = 'black';
+          this.cx.stroke();
+        });
     };
   }
 }
