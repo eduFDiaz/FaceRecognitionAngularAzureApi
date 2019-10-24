@@ -1,12 +1,13 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div style="align-content: center" class="container">
   <div class="row">
-    <h2>
+    <h1>
       Face recognition using Azure Face detection API
-    </h2>
-    <div class="col">
+    </h1>
+    <p>Copy the URL of an image in the text field, then click the button to detect faces in that Image</p>
+    <div class="col" style="border-style: dotted;">
       <canvas #canvas></canvas>
-      <span class='d-flex'>
+      <span class='w-auto d-flex'>
         <button class="btn btn-success p-1 m-1 w-25" (click)="detectFaces()">
           Click here to detect faces
         </button>

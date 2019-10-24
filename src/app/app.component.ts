@@ -21,11 +21,12 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.image.src = 'http://sparethekids.com/wp-content/uploads/2017/03/cmgmh-14320822.png';
-    if (this.image.complete) {
+    this.image.src = 'https://www.telegraph.co.uk/content/dam/technology/2018/12/18/TELEMMGLPICT000183951855_trans_NvBQzQNjv4Bqul3YgLXf2lEf3afmzmy4CDDC3Z_MGy0c2EgWsFix-NU.jpeg?imwidth=1400';
+    this.image.addEventListener('load', () => {
       this.drawImage(this.image);
+      console.log('image was loaded');
+    });
     }
-  }
 
   detectFaces() {
     const headers = new HttpHeaders({
@@ -33,13 +34,14 @@ export class AppComponent implements OnInit {
       'Ocp-Apim-Subscription-Key': environment.key
     });
 
-    const httpParams = new HttpParams({});
-    httpParams.append('returnFaceId', 'true');
-    httpParams.append('returnFaceLandmarks', 'true');
-    httpParams.append('returnFaceAttributes',
-      'age,gender,headPose,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories,blur,exposure,noise');
+    let httpParams = new HttpParams();
+    httpParams = httpParams.append('returnFaceId', 'true');
+    // httpParams = httpParams.append('returnFaceLandmarks', 'true');
+    httpParams = httpParams.append('returnFaceAttributes',
+    'age,gender,smile,emotion');
+    // 'age,gender,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories,blur,exposure,noise');
 
-    this.http.post(environment.apiEndpoint, { url: this.image.src, params: httpParams }, { headers }).subscribe(
+    this.http.post(environment.apiEndpoint, { url: this.image.src }, { headers, params: httpParams }).subscribe(
       response => {
         this.response = JSON.stringify(response, null, 4);
         this.faces = response;
@@ -50,7 +52,7 @@ export class AppComponent implements OnInit {
     );
   }
 
-  drawImage(image: any) {
+  drawImage(image: HTMLImageElement) {
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
     this.cx = canvasEl.getContext('2d');
 
@@ -71,7 +73,12 @@ export class AppComponent implements OnInit {
       this.cx.beginPath();
       this.cx.rect(box.left, box.top, box.width, box.height);
       this.cx.lineWidth = 7;
-      this.cx.strokeStyle = 'blue';
+      if (face.faceAttributes.gender === "male"){
+        this.cx.strokeStyle = 'blue';
+      }
+      if (face.faceAttributes.gender === "female"){
+        this.cx.strokeStyle = 'pink';
+      }
       this.cx.stroke();
     });
   }
