@@ -23,11 +23,11 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     // tslint:disable-next-line: max-line-length
-    this.image.src = 'https://cdn.vox-cdn.com/thumbor/sK3gMTENF_LR1DhAUl9e3V_5jC4=/0x0:2592x2017/1200x800/filters:focal(1089x801:1503x1215)/cdn.vox-cdn.com/uploads/chorus_image/image/65282724/friendscast.0.0.1429818191.0.jpg';
+    this.image.src = 'https://pop-verse.com/wp-content/uploads/2017/08/it-crowd-banner.jpg';
 
-    /* this.image.addEventListener('load', () => {
-      //this.drawImage();
-    }); */
+    this.image.addEventListener('load', () => {
+      this.RemoveTooltips();
+    });
   }
 
   detectFaces() {
@@ -72,7 +72,6 @@ export class AppComponent implements OnInit {
         height: box.height * this.scaleFactors.Y
       };
 
-      const newDiv = document.createElement('div');
       // and give it some content
       // add the text node to the newly created div
       const imgBox = document.getElementById('container').getBoundingClientRect();
@@ -87,40 +86,56 @@ export class AppComponent implements OnInit {
         height: box.height * this.scaleFactors.Y
       };
 
+      const newDiv = document.createElement('button');
+      newDiv.className = 'Tooltip';
+      newDiv.style.position = 'absolute';
+      newDiv.type = 'button';
+      newDiv.setAttribute('data-toggle', 'tooltip');
+      newDiv.setAttribute('trigger', 'focus');
+      newDiv.setAttribute('data-placement', 'right');
+      /* const attributes = [];
+      attributes.push(['Gender: ', face.faceAttributes.gender, '\n'].join(''));
+      attributes.push(['Smile: ', face.faceAttributes.smile, '\n'].join(''));
+      attributes.push(['Age: ', face.faceAttributes.age, '\n'].join(''));
+      attributes.push(['Emotion: ', JSON.stringify(face.faceAttributes.emotion, null, 4), '\n'].join('')); */
+      newDiv.setAttribute('title', JSON.stringify(face.faceAttributes, null, 4));
+      newDiv.style.top = imgBoundingBox.top.toString() + 'px';
+      newDiv.style.left = imgBoundingBox.left.toString() + 'px';
+      newDiv.style.width = imgBoundingBox.width.toString() + 'px';
+      newDiv.style.height = imgBoundingBox.height.toString() + 'px';
+      newDiv.style.zIndex = '2';
+      newDiv.style.background = 'none';
       if (face.faceAttributes.gender === 'male') {
         newDiv.style.border = '2px solid blue';
       }
       if (face.faceAttributes.gender === 'female') {
         newDiv.style.border = '2px solid pink';
       }
-      newDiv.style.position = 'absolute';
-      newDiv.style.top = imgBoundingBox.top.toString() + 'px';
-      newDiv.style.left = imgBoundingBox.left.toString() + 'px';
-      newDiv.style.width = imgBoundingBox.width.toString() + 'px';
-      newDiv.style.height = imgBoundingBox.height.toString() + 'px';
-      newDiv.style.zIndex = '2';
 
-      const tooltip = document.createElement('div');
-      tooltip.className = 'tooltip';
-      tooltip.innerHTML = 'Hover over me';
-
-      const tooltiptext = document.createElement('span');
-      tooltiptext.className = 'tooltiptext';
-      tooltiptext.innerHTML = ' fdfdf dfd fggfd';
-
-      tooltip.appendChild(tooltiptext);
-
-      newDiv.appendChild(tooltip);
+      /* newDiv.addEventListener('touchstart', () => {
+        if (this.isTouchDevice() === false) {
+          newDiv. tooltip();
+      }
+      }); */
 
       currentDiv.appendChild(newDiv);
-
-      currentDiv.addEventListener('mouseover',  () => {
-        const currentchild = newDiv.children;
-        console.log(currentchild);
-      });
     });
   }
-  onResize(event) {
-    this.drawFaces(); // window width
+  RemoveTooltips() {
+    const tooltips = document.getElementsByClassName('Tooltip');
+    while (tooltips.length > 0) {
+      tooltips[0].parentNode.removeChild(tooltips[0]);
+    }
   }
+
+  onResize(event) {
+    if (this.response !== '') {
+      this.RemoveTooltips();
+      this.drawFaces();
+    }
+  }
+
+  /* isTouchDevice() {
+    return true === ('ontouchstart' in window || window.Touch && document instanceof Touch);
+  } */
 }
