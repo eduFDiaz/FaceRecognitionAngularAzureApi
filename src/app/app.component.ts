@@ -72,12 +72,9 @@ export class AppComponent implements OnInit {
         height: box.height * this.scaleFactors.Y
       };
 
-      // and give it some content
-      // add the text node to the newly created div
       const imgBox = document.getElementById('container').getBoundingClientRect();
 
       const currentDiv = document.getElementById('container');
-
 
       const imgBoundingBox = {
         left: box.left * this.scaleFactors.X,
@@ -93,11 +90,7 @@ export class AppComponent implements OnInit {
       newDiv.setAttribute('data-toggle', 'tooltip');
       newDiv.setAttribute('trigger', 'focus');
       newDiv.setAttribute('data-placement', 'right');
-      /* const attributes = [];
-      attributes.push(['Gender: ', face.faceAttributes.gender, '\n'].join(''));
-      attributes.push(['Smile: ', face.faceAttributes.smile, '\n'].join(''));
-      attributes.push(['Age: ', face.faceAttributes.age, '\n'].join(''));
-      attributes.push(['Emotion: ', JSON.stringify(face.faceAttributes.emotion, null, 4), '\n'].join('')); */
+
       newDiv.setAttribute('title', JSON.stringify(face.faceAttributes, null, 4));
       newDiv.style.top = imgBoundingBox.top.toString() + 'px';
       newDiv.style.left = imgBoundingBox.left.toString() + 'px';
@@ -111,12 +104,6 @@ export class AppComponent implements OnInit {
       if (face.faceAttributes.gender === 'female') {
         newDiv.style.border = '2px solid pink';
       }
-
-      /* newDiv.addEventListener('touchstart', () => {
-        if (this.isTouchDevice() === false) {
-          newDiv. tooltip();
-      }
-      }); */
 
       currentDiv.appendChild(newDiv);
     });
@@ -134,8 +121,4 @@ export class AppComponent implements OnInit {
       this.drawFaces();
     }
   }
-
-  /* isTouchDevice() {
-    return true === ('ontouchstart' in window || window.Touch && document instanceof Touch);
-  } */
 }
