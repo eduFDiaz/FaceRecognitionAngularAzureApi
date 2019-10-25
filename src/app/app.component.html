@@ -1,21 +1,21 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="align-content: center" class="container">
+<div (window:resize)="onResize($event)" style="align-content: center" class="container p-3">
   <div class="row">
-    <h1>
-      Face recognition using Azure Face detection API
-    </h1>
-    <p>Copy the URL of an image in the text field, then click the button to detect faces in that Image</p>
-    <div class="col" style="border-style: dotted;">
-      <canvas #canvas></canvas>
+    <div class="col w-100 p-1 m-1" style="border-style: dotted; z-index: 1;">
+      <h3>
+        Face recognition using Azure Face detection API
+      </h3>
+      <p>Copy the URL of an image in the text field, then click the button to detect faces in that Image</p>
+      <div id="container" style="border-style: dashed; position: relative;">
+        <img class="w-100" [src]="image.src" style="position: relative; z-index: 2" #htmlImage>
+      </div>
       <span class='w-auto d-flex'>
         <button class="btn btn-success p-1 m-1 w-25" (click)="detectFaces()">
           Click here to detect faces
         </button>
-        <input type="text" (change)="drawImage(image)" class="p-1 m-1 w-75" rows="1" [(ngModel)]="image.src">
+        <input type="text" (change)="drawImage()" class="p-1 m-1 w-75" rows="1" [(ngModel)]="image.src">
       </span>
-    </div>
-    <div class="container">
-      <textarea class="p-1 m-1" *ngIf="response" id="" cols="100" rows="10">{{
+      <textarea class="w-100 p-1 m-1" *ngIf="response" id="" rows="10">{{
         response
       }}</textarea>
     </div>
