@@ -1,5 +1,5 @@
 import { environment } from './../environments/environment';
-import { Component, ViewChild, Input, OnInit } from '@angular/core';
+import { Component, ViewChild, Input, OnInit, Renderer2, ElementRef } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 
@@ -13,16 +13,13 @@ export class AppComponent implements OnInit {
   response = '';
   faces: any;
   image = new Image();
-  @ViewChild('image', { static: true }) htmlImage;
-  cx: CanvasRenderingContext2D;
-  canvasEl: HTMLCanvasElement;
+  @ViewChild('container', { static: true }) htmlImage: ElementRef;
   scaleFactors = { X: null, Y: null };
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private renderer: Renderer2) {
   }
 
   ngOnInit(): void {
-    // tslint:disable-next-line: max-line-length
     this.image.src = 'https://pop-verse.com/wp-content/uploads/2017/08/it-crowd-banner.jpg';
 
     this.image.addEventListener('load', () => {
@@ -55,6 +52,7 @@ export class AppComponent implements OnInit {
   }
 
   drawImage() {
+    this.htmlImage.nativeElement;
     const imgBox = document.getElementById('container').getBoundingClientRect();
     this.scaleFactors.X = imgBox.width / this.image.width;
     this.scaleFactors.Y = imgBox.height / this.image.height;
@@ -65,16 +63,6 @@ export class AppComponent implements OnInit {
 
     this.faces.forEach(face => {
       const box = face.faceRectangle;
-      const boundingBox = {
-        left: box.left * this.scaleFactors.X,
-        top: box.top * this.scaleFactors.Y,
-        width: box.width * this.scaleFactors.X,
-        height: box.height * this.scaleFactors.Y
-      };
-
-      const imgBox = document.getElementById('container').getBoundingClientRect();
-
-      const currentDiv = document.getElementById('container');
 
       const imgBoundingBox = {
         left: box.left * this.scaleFactors.X,
@@ -83,36 +71,34 @@ export class AppComponent implements OnInit {
         height: box.height * this.scaleFactors.Y
       };
 
-      const newDiv = document.createElement('button');
-      newDiv.className = 'Tooltip';
-      newDiv.style.position = 'absolute';
-      newDiv.type = 'button';
-      newDiv.setAttribute('data-toggle', 'tooltip');
-      newDiv.setAttribute('trigger', 'focus');
-      newDiv.setAttribute('data-placement', 'right');
-
-      newDiv.setAttribute('title', JSON.stringify(face.faceAttributes, null, 4));
-      newDiv.style.top = imgBoundingBox.top.toString() + 'px';
-      newDiv.style.left = imgBoundingBox.left.toString() + 'px';
-      newDiv.style.width = imgBoundingBox.width.toString() + 'px';
-      newDiv.style.height = imgBoundingBox.height.toString() + 'px';
-      newDiv.style.zIndex = '2';
-      newDiv.style.background = 'none';
+      const b: HTMLButtonElement = this.renderer.createElement('button');
       if (face.faceAttributes.gender === 'male') {
-        newDiv.style.border = '2px solid blue';
+        b.style.border = '2px solid blue';
       }
       if (face.faceAttributes.gender === 'female') {
-        newDiv.style.border = '2px solid pink';
+        b.style.border = '2px solid pink';
       }
+      b.setAttribute('appTippy', '');
+      b.setAttribute('title', JSON.stringify(face.faceAttributes, null, 4));
+      b.style.position = 'absolute';
 
-      currentDiv.appendChild(newDiv);
+      b.style.top = imgBoundingBox.top.toString() + 'px';
+      b.style.left = imgBoundingBox.left.toString() + 'px';
+      b.style.width = imgBoundingBox.width.toString() + 'px';
+      b.style.height = imgBoundingBox.height.toString() + 'px';
+      b.style.zIndex = '2';
+      b.style.background = 'none';
+
+      this.renderer.appendChild(this.htmlImage.nativeElement, b);
     });
   }
+
   RemoveTooltips() {
-    const tooltips = document.getElementsByClassName('Tooltip');
-    while (tooltips.length > 0) {
-      tooltips[0].parentNode.removeChild(tooltips[0]);
-    }
+      let tooltips: HTMLCollection = this.htmlImage.nativeElement.children;
+      while (tooltips.length > 1) {
+        this.renderer.removeChild(this.htmlImage.nativeElement, tooltips.item(tooltips.length - 1));
+        tooltips = this.htmlImage.nativeElement.children;
+      }
   }
 
   onResize(event) {

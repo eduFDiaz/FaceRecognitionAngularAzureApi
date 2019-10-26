@@ -1,5 +1,5 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div (window:resize)="onResize($event)" style="align-content: center" class="container p-3">
+<div style="align-content: center" class="container p-3">
   <div class="row">
     <div class="col w-100 p-1 m-1" style="border-style: dotted; z-index: 1;">
       <h3>
@@ -10,7 +10,8 @@
         <li>Click the button to detect faces in that Image</li>
         <li>Hover over the boxes to see the features of the faces</li>
       </ul>
-      <div id="container" style="border-style: dashed; position: relative;">
+      <!-- <button title="I am a tooltip" appTippy [tippyOptions]="{arrow: true}">Click</button> -->
+      <div (window:resize)="onResize($event)" id="container" style="border-style: dashed; position: relative;" #container>
         <img class="w-100" [src]="image.src" style="position: relative; z-index: 2" #htmlImage>
       </div>
       <span class='w-auto d-flex'>
